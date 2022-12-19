@@ -5,9 +5,11 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    token = serializers.CharField(read_only=True)
+
     class Meta:
         model = User
-        fields = ["username", "password"]
+        fields = ["id", "username", "password", "token"]
 
     def create(self, validated_data):
         username = validated_data["username"]
@@ -15,6 +17,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
         new_user = User(username=username)
         new_user.set_password(password)
         new_user.save()
+
+        payload = RefreshToken.for_user(new_user)
+        payload['username'] = str(username)
+        validated_data['token'] = str(payload.access_token)
         return validated_data
 
 
@@ -22,7 +28,7 @@ class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
-    access = serializers.CharField(allow_blank=True, read_only=True)
+    token = serializers.CharField(allow_blank=True, read_only=True)
 
     def validate(self, data):
         my_username = data.get("username")
@@ -39,5 +45,5 @@ class UserLoginSerializer(serializers.Serializer):
         payload = RefreshToken.for_user(user_obj)
         token = str(payload.access_token)
 
-        data["access"] = token
+        data["token"] = token
         return data
