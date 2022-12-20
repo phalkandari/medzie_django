@@ -25,6 +25,6 @@ urlpatterns = [
     # path("logout/", logout_user, name="logout"),
     # path("login/", user_login, name="login"),
 
-    path("api/signup/", UserCreateAPIView.as_view() , name="signup"),
-    path("api/signin/", UserLoginAPIView.as_view() , name="signin"),
+    path("api/signup", UserCreateAPIView.as_view() , name="signup"),
+    path("api/signin", UserLoginAPIView.as_view() , name="signin"),
 ]
