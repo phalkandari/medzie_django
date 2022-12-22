@@ -3,6 +3,11 @@ from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
+class UserProfileSerializer(serializers.ModelSerializer): 
+     class Meta:
+        model = User
+        fields = ["id", "username"]
+
 class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     token = serializers.CharField(read_only=True)
@@ -43,7 +48,9 @@ class UserLoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("Incorrect username/password combination!")
 
         payload = RefreshToken.for_user(user_obj)
+        payload['username'] = str(my_username)
         token = str(payload.access_token)
 
         data["token"] = token
         return data
+

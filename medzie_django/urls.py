@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from prescription.views import PrescriptionListView
 from user.views import UserLoginAPIView, UserCreateAPIView
 #  user_register, logout_user, user_login,
 urlpatterns = [
@@ -26,5 +27,10 @@ urlpatterns = [
     # path("login/", user_login, name="login"),
 
     path("api/signup", UserCreateAPIView.as_view() , name="signup"),
-    path("api/signin", UserLoginAPIView.as_view() , name="signin"),
+    path("api/signin/", UserLoginAPIView.as_view() , name="signin"),
+
+
+
+
+    path("api/prescriptions/", PrescriptionListView.as_view(), name="prescriptions list")
 ]
